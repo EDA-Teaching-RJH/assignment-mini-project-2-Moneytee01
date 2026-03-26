@@ -203,4 +203,79 @@ def save_order_to_csv(customer_name, lotalty_code, order_items, total):
                              str(total)])
 
 
+#------------------------------------------------------------------------------------------------------
+# Default Menu Data (used on first run before the menu.csv exists)
+#------------------------------------------------------------------------------------------------------
 
+DEFAULT_MENU = [
+    Fooditem("Starter", "Gray Matter Mini Sliders", 6.00, "American", 
+             ["Celerals containing gluten (Wheat, barley, rye, oats)", "Milk / Dairy"])
+    Fooditem("Starter", "Wildmutt Monster Bites", 5.50, "Fusion", 
+             ["Gluten", "Milk / Dairy"]),
+    Fooditem("Starter", "Four arms Spicy Wings", 9.00, "American", 
+             ["allergen friendly"]),
+    Fooditem("Main", "Ben 10 Hero Burger", 12.00, "American", 
+             ["Gluten", "Milk / Dairy", "Eggs", "Sesame", "Mustard"]),
+    Fooditem("Main", "Heatblast Fiery Pizza", 12.00, "Italian", 
+             ["Gluten", "Milk / Dairy", "Eggs"]),
+    Fooditem("Main", "Diamondhead crystal pasta salad", 8.50, "Italian", 
+             ["Gluten", "Milk / Dairy", "Eggs"]),
+    Fooditem("Main", "Upgrade Mac and Cheese", 10.00, "American", 
+             ["Gluten", "Milk / Dairy"]),
+    Fooditem("Dessert", "Big Chill Sundae", 10.00, "American", 
+             ["Milk / Dairy", "Gluten"]),
+    Fooditem("Dessert", "Omnitrix Donuts", 6.00, "American", 
+             ["Gluten", "Milk / Dairy", "Eggs"]),
+    Fooditem("Dessert", "Goop Jelly Cups", 3.00, "Fusion", 
+             ["Gluten", "Milk / Dairy"]),
+    Fooditem("Dessert", "Ben's Cosmic Cookies", 5.00, "American", 
+             ["Gluten", "Milk / Dairy", "Eggs"]),
+    DrinkItem("Drink", "XLR8 Speed Shake", 6.00, False, 
+              ["Milk / Dairy"]),
+    DrinkItem("Drink", "Omnitrix Energy Punch", 5.00, False, 
+              ["allergen friendly"]),
+    DrinkItem("Drink", "Kevin 11 Chaos Cola", 4.50, False, 
+              ["allergen friendly"]),
+    DrinkItem("Drink", "Gwen's Magic Berry Smoothie", 6.00, False, 
+              ["Milk / Dairy", "contains yogurt"]),
+]
+# Full allergen reference list for customer information and menu item allergen tagging
+ALLERGENS_LIST = [
+    "Cereals contains gluten (wheat, barley, rye, oats)",
+    "Milk / Dairy",
+    "Eggs",
+    "Peanuts",
+    "Tree nuts (almonds, walnuts, cashews, etc.)",
+    "Soybeans / Soy",
+    "Fish",
+    "Shellfish (shrimp, crab, lobster, etc.)",
+    "Molluscs (clams, mussels, oysters, etc.)"
+    "Sesame seeds",
+    "Celery",
+    "mustard",
+    "Sulphur dioxide and sulphites",
+    "Lupin",
+]
+
+# ---------------------------------------------------------------------------
+# Main application
+# ---------------------------------------------------------------------------
+
+def main():
+    # -- Greeting -----------------------------------------------------------
+    print("=" * 65)
+    print("       Welcome to XLR8 Speed Grill!")
+    print("=" * 65)
+
+    #Collect and validate customer name using regex utility
+    customer_name = validate_name("May I take your name? ")
+    print(f"/nGreat to have you with us, {customer_name}!/n")
+
+    # Collect optional loyalty code using regex utility
+    validaty_code = validate_loyalty_card(
+        "Do you have a loyalty code? (e.g. XLR001 - or type 'skip'): "
+    )
+    if loyalty_code:
+        print(f"  Loyalty code {loyalty_code} noted - thank you"/n")
+              
+              # -- Load menu (form CSV if e
