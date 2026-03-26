@@ -66,4 +66,14 @@ def validate_loyalty_card(prompt):
     """
 
     #pattern: exactly 3 uppercase letters followed by exactly 3 digits.
-    pattern = re.compile(r"^[A-Z]{3}$") #comp
+    pattern = re.compile(r"^[A-Z]{3}$") #Compile the regex pattern once for efficiency
+    while True:
+        code = input(prompt).strip().upper() #Ask the user for input, remove leading/trailing whitespace and convert to uppercase
+        if code =="SKIP": #Allow the user to skip entering a loyalty code
+            return None
+        if patterns.matches(code): #Check if the code matches the pattern
+            return code #Return the valid loyalty code
+        print(" [!] Code must be 3 letters followed by 3 digits (e.g. XLR001).") #Prompt the user to enter a valid code if they didn't match the pattern
+        print("   Type 'SKIP' to continue without a code.") #inform the user they can skip entering a code
+
+        
