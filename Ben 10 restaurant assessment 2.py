@@ -132,6 +132,15 @@ class FoodItem(MenuItemBase):
         base_display = super().display() # Get the base display string from the parent class
         return f"{base_display} Cuisine: {self.cuisine_style}" # Append the cuisine style information to the base display string
 
+class DrinkItem(MenuItemBase):
+    """
+    Subclass of MenuItemBase representing drink items.
+    Inherits all attributes and methods from the base class.
+    """
+
+    def __init__(self, item_type, name, price, allergens=None):
+        super().__init__(item_type, name, price, allergens)
+
 #------------------------------------------------------------------------------------------------------
 # File I/O: Menu CSV Helpers
 #------------------------------------------------------------------------------------------------------
@@ -146,12 +155,12 @@ def save_menu_to_csv(menu, filename=MENU_CSV):
     Saves the Full menu to MENU_CSV so it can be loaded on future runs.
     Each row: item_type, name, price, allergens (pipe-seperated), Subclass_type
     """
-    with open(MENU_CSV, "w", newline="", encoding="utf-8") as csvfile:
-        writer = csv.writer(f)
+    with open(filename, "w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.writer(csvfile)
         writer.writerow(["item_type", "name", "price", "allergens", "subclass_type"]) #Write the header row
-        for item in menu_items:
+        for item in menu:
             subclass = "drink" if isinstance(item, DrinkItem) else "food"
-            writer.writerow(item.to_csv_row() + [sunclass]) #Write the item data along with its subclass type
+            writer.writerow(item.to_csv_row() + [subclass]) #Write the item data along with its subclass type
 
 
 def load_menu_form_csv(filepath):
@@ -167,4 +176,31 @@ def load_menu_form_csv(filepath):
     with open(filepath, "r", newline="", encoding="utf-8") as f
     reader = csv.DictReader(f)
     for row in reader:
-        
+        allergens = row["allergens"].split("|") if row["allergens"] else []
+        if row["subclass"] == "drink":
+            items.append(DrinkItem(row["item_type"], row["name"],
+                                   row["price"], allergens))
+        else:
+            items.append(FoodItem(row["item_type"], row["name"],
+                                     row["price"], "Unknown", allergens))
+    return items
+
+def save_order_to_csv(customer_name, lotalty_code, order_items, total):
+"""
+Appends the customer's completed order to ORDERS_CSV.
+Each item in the order is written as a seperate row, with the customer name and order total repeated on each row for easy parsing.
+"""
+file_exists = os.path.exists(ORDER_CSV)
+
+with open(ORDER_CSV, "a", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    # Write the header row if the file is being created for the first time
+    if not file_exists:
+        writer.writerow(["customer_name", "loyalty_code", "item_name", "item_price", "order_total"])
+    for item in order_items:
+        writer.writerow([customer_name, loyalty_code or "N/A",
+                         item.name, item.name,
+                         str(item.price), str(total)])
+
+
+
