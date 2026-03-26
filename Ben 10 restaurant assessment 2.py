@@ -131,4 +131,17 @@ class FoodItem(MenuItemBase):
         Override the base display to include cuisine style in the formatted string representation of the food item."""
         base_display = super().display() # Get the base display string from the parent class
         return f"{base_display} Cuisine: {self.cuisine_style}" # Append the cuisine style information to the base display string
-        
+
+#------------------------------------------------------------------------------------------------------
+# File I/O: Menu CSV Helpers
+#------------------------------------------------------------------------------------------------------
+
+
+MENU_CSV = "menu.csv" # path to the menu CSV file
+ORDER_CSV = "orders.csv" # path to the orders CSV file
+
+
+def save_menu_to_csv(menu, filename=MENU_CSV):
+    """
+    Saves the Full menu to MENU_CSV so it can be loaded on future runs.
+    Each row: item
