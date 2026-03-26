@@ -1,0 +1,16 @@
+item_type,name,price,allergens,subclass_type
+Starter,Gray Matter Mini Sliders,6.0,"Celerals containing gluten (Wheat, barley, rye, oats);Milk / Dairy",food
+Starter,Wildmutt Monster Bites,5.5,Gluten;Milk / Dairy,food
+Starter,Four arms Spicy Wings,9.0,allergen friendly,food
+Main,Ben 10 Hero Burger,12.0,Gluten;Milk / Dairy;Eggs;Sesame;Mustard,food
+Main,Heatblast Fiery Pizza,12.0,Gluten;Milk / Dairy;Eggs,food
+Main,Diamondhead crystal pasta salad,8.5,Gluten;Milk / Dairy;Eggs,food
+Main,Upgrade Mac and Cheese,10.0,Gluten;Milk / Dairy,food
+Dessert,Big Chill Sundae,10.0,Milk / Dairy;Gluten,food
+Dessert,Omnitrix Donuts,6.0,Gluten;Milk / Dairy;Eggs,food
+Dessert,Goop Jelly Cups,3.0,Gluten;Milk / Dairy,food
+Dessert,Ben's Cosmic Cookies,5.0,Gluten;Milk / Dairy;Eggs,food
+Drink,XLR8 Speed Shake,6.0,Milk / Dairy,drink
+Drink,Omnitrix Energy Punch,5.0,allergen friendly,drink
+Drink,Kevin 11 Chaos Cola,4.5,allergen friendly,drink
+Drink,Gwen's Magic Berry Smoothie,6.0,Milk / Dairy;contains yogurt,drink
