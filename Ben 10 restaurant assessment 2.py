@@ -33,3 +33,37 @@ or 'no'
     Uses regex to accept flexible casing(Yes / YES / no / NO etc.)
     Returns the lowercased response string.
     """ 
+    # The entire string is exactly "yes" or "no" according to the pattern.
+    # case-insensitive.
+
+    pattern = re.compile(r"^(yes|no)$", re.IGNORECASE) # For efficiency, compile the regex pattern once.
+    while True:
+        response = input(prompt).strip() # Request input from the user and eliminate leading and trailing whitespace
+        if pattern.match(response):# check if the response matches the pattern
+            return response.lower() # Return the response in lowercase for consistency
+        print(" [!] please enter 'yes' or 'no'.") # Prompt the user to enter a valid response if they didn't match the pattern
+
+
+def validate_name(prompt):
+    """
+    Utility: Validates that a customer name contains only letters and spaces.
+    Uses regex to reject numeric or special-character input.
+    Returns the stripped name string.
+    """
+    # Pattern: one or more letters or spaces, from start to end of the string. Case-insensitive.
+    pattern = re.compile(r'^[A-Za-z\s]+$') #Compile the regex pattern once for efficiency
+    while True:
+    name = input(prompt).string.strip() # Ask the user for input and remove leading/trailing whitespace
+    if pattern.match(name):
+       return Name
+    print(" [!] Name must contain letters only (no numbers or symbols).")
+
+def validate_loyalty_card(prompt):
+    """
+    Utility: Validates that the loyalty code in the format XXX000 (three uppercase letters followed by three digits), e.g XLR001.
+    Uses regex for pattern matching.
+    Returns the uppercsed code, or None if the user skips.
+    """
+
+    #pattern: exactly 3 uppercase letters followed by exactly 3 digits.
+    pattern = re.compile(r"^[A-Z]{3}$") #comp
