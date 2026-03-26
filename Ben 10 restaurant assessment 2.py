@@ -53,10 +53,10 @@ def validate_name(prompt):
     # Pattern: one or more letters or spaces, from start to end of the string. Case-insensitive.
     pattern = re.compile(r'^[A-Za-z\s]+$') #Compile the regex pattern once for efficiency
     while True:
-    name = input(prompt).string.strip() # Ask the user for input and remove leading/trailing whitespace
-    if pattern.match(name):
-       return Name
-    print(" [!] Name must contain letters only (no numbers or symbols).")
+        name = input(prompt).string.strip() # Ask the user for input and remove leading/trailing whitespace
+        if pattern.match(name):
+            return name
+        print(" [!] Name must contain letters only (no numbers or symbols).")
 
 def validate_loyalty_card(prompt):
     """
@@ -71,9 +71,12 @@ def validate_loyalty_card(prompt):
         code = input(prompt).strip().upper() #Ask the user for input, remove leading/trailing whitespace and convert to uppercase
         if code =="SKIP": #Allow the user to skip entering a loyalty code
             return None
-        if patterns.matches(code): #Check if the code matches the pattern
+        if pattern.matches(code): #Check if the code matches the pattern
             return code #Return the valid loyalty code
         print(" [!] Code must be 3 letters followed by 3 digits (e.g. XLR001).") #Prompt the user to enter a valid code if they didn't match the pattern
         print("   Type 'SKIP' to continue without a code.") #inform the user they can skip entering a code
 
-        
+#------------------------------------------------------------------------------------------------------
+# OOP: Base class and Subclasses for Menu Items
+#------------------------------------------------------------------------------------------------------
+
