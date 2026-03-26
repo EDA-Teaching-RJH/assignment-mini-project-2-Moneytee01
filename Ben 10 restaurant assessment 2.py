@@ -186,21 +186,21 @@ def load_menu_form_csv(filepath):
     return items
 
 def save_order_to_csv(customer_name, lotalty_code, order_items, total):
-"""
-Appends the customer's completed order to ORDERS_CSV.
-Each item in the order is written as a seperate row, with the customer name and order total repeated on each row for easy parsing.
-"""
-file_exists = os.path.exists(ORDER_CSV)
+    """
+    Appends the customer's completed order to ORDERS_CSV.
+    Each item in the order is written as a seperate row, with the customer name and order total repeated on each row for easy parsing.
+    """
+    file_exists = os.path.exists(ORDER_CSV)
 
-with open(ORDER_CSV, "a", newline="", encoding="utf-8") as f:
-    writer = csv.writer(f)
-    # Write the header row if the file is being created for the first time
-    if not file_exists:
-        writer.writerow(["customer_name", "loyalty_code", "item_name", "item_price", "order_total"])
-    for item in order_items:
-        writer.writerow([customer_name, loyalty_code or "N/A",
-                         item.name, item.name,
-                         str(item.price), str(total)])
+    with open(ORDER_CSV, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        # Write the header row if the file is being created for the first time
+        if not file_exists:
+            writer.writerow(["customer_name", "loyalty_code", "item_name", "item_price", "order_total"])
+        for item in order_items:
+            writer.writerow([customer_name, lotalty_code or "N/A",
+                             item.name, item.price,
+                             str(total)])
 
 
 
