@@ -25,3 +25,7 @@ from decimal import Decimal
 # BE imported with: form XLR8_utils import validate_yes_no, validate_name
 #------------------------------------------------------------------------------------------------------
 
+
+def validate_yes_no(prompt):
+    """
+    Utility: Repeatedly prompts the user until they enter 'yes'
