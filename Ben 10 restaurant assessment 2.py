@@ -29,3 +29,4 @@ from decimal import Decimal
 def validate_yes_no(prompt):
     """
     Utility: Repeatedly prompts the user until they enter 'yes'
+or 'no'
