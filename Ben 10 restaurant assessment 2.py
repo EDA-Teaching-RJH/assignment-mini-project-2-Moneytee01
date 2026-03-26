@@ -31,3 +31,5 @@ def validate_yes_no(prompt):
     Utility: Repeatedly prompts the user until they enter 'yes'
 or 'no'
     Uses regex to accept flexible casing(Yes / YES / no / NO etc.)
+    Returns the lowercased response string.
+    """ 
