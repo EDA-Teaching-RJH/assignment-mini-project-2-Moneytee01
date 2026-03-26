@@ -144,4 +144,27 @@ ORDER_CSV = "orders.csv" # path to the orders CSV file
 def save_menu_to_csv(menu, filename=MENU_CSV):
     """
     Saves the Full menu to MENU_CSV so it can be loaded on future runs.
-    Each row: item
+    Each row: item_type, name, price, allergens (pipe-seperated), Subclass_type
+    """
+    with open(MENU_CSV, "w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.writer(f)
+        writer.writerow(["item_type", "name", "price", "allergens", "subclass_type"]) #Write the header row
+        for item in menu_items:
+            subclass = "drink" if isinstance(item, DrinkItem) else "food"
+            writer.writerow(item.to_csv_row() + [sunclass]) #Write the item data along with its subclass type
+
+
+def load_menu_form_csv(filepath):
+    """
+    Reads the menu form a CSV file and reconstructs the foodItem / DrinkItem objects.
+    Returns a list of MenuItemBase subclass instances.
+    If the file does not exist, returns an empty list.
+    """
+    items = []
+    if not os.path.exists(filepath):
+        return items #Returns an empty list if the file doesn't exist
+    
+    with open(filepath, "r", newline="", encoding="utf-8") as f
+    reader = csv.DictReader(f)
+    for row in reader:
+        
