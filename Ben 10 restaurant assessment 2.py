@@ -173,16 +173,16 @@ def load_menu_form_csv(filepath):
     if not os.path.exists(filepath):
         return items #Returns an empty list if the file doesn't exist
     
-    with open(filepath, "r", newline="", encoding="utf-8") as f
-    reader = csv.DictReader(f)
-    for row in reader:
-        allergens = row["allergens"].split("|") if row["allergens"] else []
-        if row["subclass"] == "drink":
-            items.append(DrinkItem(row["item_type"], row["name"],
-                                   row["price"], allergens))
-        else:
-            items.append(FoodItem(row["item_type"], row["name"],
-                                     row["price"], "Unknown", allergens))
+    with open(filepath, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            allergens = row["allergens"].split("|") if row["allergens"] else []
+            if row["subclass"] == "drink":
+                items.append(DrinkItem(row["item_type"], row["name"],
+                                       row["price"], allergens))
+            else:
+                items.append(FoodItem(row["item_type"], row["name"],
+                                         row["price"], "Unknown", allergens))
     return items
 
 def save_order_to_csv(customer_name, lotalty_code, order_items, total):
@@ -269,13 +269,150 @@ def main():
 
     #Collect and validate customer name using regex utility
     customer_name = validate_name("May I take your name? ")
-    print(f"/nGreat to have you with us, {customer_name}!/n")
+    print(f"\nGreat to have you with us, {customer_name}!\n")
 
     # Collect optional loyalty code using regex utility
-    validaty_code = validate_loyalty_card(
+    loyalty_code = validate_loyalty_card(
         "Do you have a loyalty code? (e.g. XLR001 - or type 'skip'): "
     )
-    if loyalty_code:
-        print(f"  Loyalty code {loyalty_code} noted - thank you"/n")
-              
-              # -- Load menu (form CSV if e
+if loyalty_code:
+    print(f"  Loyalty code {loyalty_code} noted - thank you\n")
+
+# -- Load menu (form CSV if it exists, otherwise use hardcoded default) - 
+menu = load_menu_form_csv(MENU_CSV)
+if not menu:
+    # First run: use defaults and persist them to CSV for future runs
+    menu = DEFAULT_MENU
+    save_menu_to_csv(menu)
+    print("  [info] Menu loaded form defaults and saved to menu.csv.\n")
+else:
+    print("  [Info] Menu loaded form menu.csv.\n")
+
+# -- Allergen declaration -------------------------------------------------------
+allergen_response = validate_yes_no(
+    "Do you have any food allergies we should know about? (yes/no): "
+
+)
+
+customer_allergens = []
+
+if allergen_response == "no":
+    print("\nUnderstood! If anything changes, just let us know.\n")
+else:
+    print("\nThank you for letting us know. Here are the allergens present")
+    print("in our kitchen - please tell us which apply to you:\n")
+    for i, allergen in enumerate(ALLERGENS_LIST, start=1):
+        print(f" {i:>2}. {allergen}")
+
+    print("\nEnter your allergens one at a time.")
+    print("Type 'done' when you have finished.\n")
+
+    while True:
+        entry = input(" Allergen: ").strip()
+        if entry.lower() == "done":
+            break
+        if entry:
+            customer_allergens.append(entry)
+            print(f" Added: {entry}")
+
+if customer_allergens:
+    print(f"\n Recorded allergens: {', '.join(customer_allergens)}")
+print("\nWe will filter the menu to show only item that are safe for you.\n")
+
+# -- Display (filtered) menu --------------------------------------------
+see_menu = validate_yes_no("Would you like to see the meny? (yes/no): ")
+
+if see_menu == "no":
+    print("\nNo problem! Come back any time - we hope to see you soon.")
+    return
+
+print("\n" + "=" * 65)
+print("  OUR MENU")
+print("=" * 65)
+
+# Group items by catagory for a cleaner display 
+categories = ["Starter", "Main", "Dessert", "Drink"]
+safe_items = [] # Keep track of items the customer can safely order
+
+for category in categories:
+    category_items = [item for item in menu if item.item_type == category]
+    if not category_items:
+        continue
+
+    print(f"\n -- {category.upper()} --")
+    for item in category_items:
+        if item.is_safe_for(customer_allergens):
+            print(item.display())
+            safe_items.append(item)
+        else:
+            #show item but clearly flag it as unsafe
+            print(f" [ALLERGEN WARNING] {item.name} - contains one or more of your allergens.")
+
+print("\n" +"=" *65)
+
+# -- Order taking -------------------------------------------------------------------
+
+order = []
+total = Decimal("0.00")
+
+
+print("\nplease enter the name of each item you would like to order.")
+print("Type 'done' when you have finished.\n")
+
+while True:
+    choice = input("Item name: ").strip()
+    if choice.lower() == "done":
+        break
+
+    if not choice:
+        continue
+
+    found = False 
+    for item in menu:
+        if item.name.lower() == choice.lower():
+            found = True
+
+            # Check allergen conflict before adding to order 
+
+            if not item.is_safe_for(customer_allergens):
+                print(f" [!] Sorry - {item.name} contains allergens you declared.")
+                print("    Please choose a different item.")
+            else:
+                order.append(item)
+                total += item.price
+                print(f"  ✓ {item.name} added to your order (£{item.price:.2f}).")
+            break
+
+    if not found:
+        print(" [!] That item wasn't found. Please check the spelling and try again.")
+
+
+# -- Order summary ------------------------------------------------------
+
+print("\n" + "=" * 65)
+
+if not order:
+    print(" No items were ordered. We hope to serve you next time!")
+
+else:
+    print(" YOUR ORDER SUMMARY")
+    print("=" * 65)
+    for item in order:
+        print(f" {item.name:<40} £{item.price:.2f}")
+    print("-" * 65)
+    print(f" {'TOTAL':<40} £{total:.2f}")
+    print("=" * 65)
+
+# Save the order to CSV (File I/O - write)
+save_order_to_csv(customer_name, loyalty_code, order, total)
+print(f"\n Order saved to '{ORDER_CSV}'.")
+print(f"\n Thank you for dining at XLR8 Speed Grill, {customer_name}!")
+print(" We hope to see you again soon!\n")
+
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+ 
+if __name__ == "__main__":
+    main()
