@@ -77,6 +77,58 @@ def validate_loyalty_card(prompt):
         print("   Type 'SKIP' to continue without a code.") #inform the user they can skip entering a code
 
 #------------------------------------------------------------------------------------------------------
-# OOP: Base class and Subclasses for Menu Items
+#OPP: Base class and subclass for Menu Items
 #------------------------------------------------------------------------------------------------------
 
+class MenuItemBase:
+    """
+    Abstract base class for all items that can appear on the menu.
+    stores the common attributes shared by every menu item type.
+    """
+
+    def __init__(self, item_type, name, price, allergens=None):
+        self.item_type = item_type # The catagory of the menu item (e.g. Starter, Main, Dessert, Drink)
+        self.name = name # The name of the menu item (e.g. "Ben 10 Hero Burger")
+        self.price = Decimal(str(price)) # The price of the menu item, stored as a Decimal for accurate currency repersentation
+        self.allergens = allergens or [] #A list of allergens present in the menu item, defaulting to an empty list if not provided
+    
+    def is_safe_for(self, customer_allergns):
+        """
+        Returns True if not the item's allergens in the customer's declared allergens list, False otherwise.
+        This method is inherited and available on all subclasses, allowing us to easily check if a menu item is safe for a customer based on their allergens.
+        """
+        for allergen in self.allergens:
+            # Case-insensitive Substring check so partial matches are caught
+            for ca in customer_allergns:
+                if ca.lower() in allergen.lower() or allergen.lower() in ca.lower():
+                    return False
+        return True
+    
+    def display(self):
+        """
+        Returns a formatted one-line string representation of the menu item,"""
+        allergen_str = ", ".join(self.allergens) if self.allergens else "None"
+        return f" [{self.item_type}] {self.name:<35} £{self.price:.2f} Allergens: {allergen_str}"
+    
+    def to_csv_row(self):
+        """
+        Retuens a list suitable for writing as a CSVrow."""
+        return [self.item_type, self.name, str(self.price), ";".join(self.allergens)]
+
+class FoodItem(MenuItemBase):
+    """
+    Subclass of MenuItemBase repersenting food items (Starters, Mains, Desserts).
+    Adds a 'cuisine_style' attribute to specific to food items.
+    """
+
+    def __init__(self, item_type, name, price, cuisine_style, allergens=None):
+        # Call the parent class constructor or set the common attributes directly
+        super().__init__(item_type, name, price, allergens) # Call the base class constructor to initialize common attributes
+        self.cuisine_style = cuisine_style # The cuisine style of the food item (e.g. "American", "Italian", "Mexican" etc.)
+
+    def display(self):
+        """
+        Override the base display to include cuisine style in the formatted string representation of the food item."""
+        base_display = super().display() # Get the base display string from the parent class
+        return f"{base_display} Cuisine: {self.cuisine_style}" # Append the cuisine style information to the base display string
+        
